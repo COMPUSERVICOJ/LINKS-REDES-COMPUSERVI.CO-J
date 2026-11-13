@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COMPUSERVI.CO J - Soluciones Tecnologicas</title>
-  
+  <title>COMPUSERVI.CO J - Soluciones Tecnológicas</title>
+
   <!-- Icono de la pestaña (Favicon) -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/J7x8FNxr/LOGO-CS-BLANCO.png">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/J7x8FNxr/LOGO-CS-BLANCO.png">
@@ -12,7 +12,7 @@
   <style>
     :root {
       --bg-color: #030712;
-      --card-bg: rgba(17, 24, 39, 0.7);
+      --card-bg: rgba(17, 24, 39, 0.75);
       --border-color: rgba(56, 189, 248, 0.3);
       --accent-glow: rgba(56, 189, 248, 0.15);
       --text-main: #f8fafc;
@@ -20,13 +20,16 @@
       --primary: #38bdf8;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       background-color: var(--bg-color);
-      /* Fondo con rejilla sutil de estilo tecnológico */
       background-image: 
         radial-gradient(circle at 50% 0%, var(--accent-glow) 0%, transparent 50%),
-        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
       background-size: 100% 100%, 30px 30px, 30px 30px;
       color: var(--text-main);
       font-family: system-ui, -apple-system, sans-serif;
@@ -36,6 +39,33 @@
       min-height: 100vh;
       margin: 0;
       padding: 50px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Luz ambiental que sigue el movimiento del mouse */
+    .cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.06) 40%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .profile-container {
@@ -49,25 +79,25 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--primary);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
+      background-color: #030712;
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       margin: 0 0 8px 0;
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
       text-align: center;
     }
 
-    /* Estilo para el lema compacto */
     .tagline {
       color: var(--text-muted);
       font-size: 0.9rem;
       text-align: center;
       margin: 0 0 35px 0;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .tagline span {
@@ -87,70 +117,89 @@
       backdrop-filter: blur(10px);
       color: var(--text-main);
       text-decoration: none;
-      padding: 18px 24px;
+      padding: 16px 24px;
       border-radius: 14px;
-      text-align: center;
       font-weight: 600;
       font-size: 0.95rem;
       border: 1px solid var(--border-color);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 12px;
       position: relative;
       overflow: hidden;
     }
 
-    /* Efecto de brillo futurista al pasar el mouse */
+    /* Brillo interno en cada tarjeta según la posición del mouse */
+    .link-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        220px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(56, 189, 248, 0.28),
+        transparent 75%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .link-card:hover::before {
+      opacity: 1;
+    }
+
     .link-card:hover {
-      background-color: rgba(56, 189, 248, 0.1);
       border-color: var(--primary);
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.38);
       transform: translateY(-3px);
     }
+
+    .social-icon {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      flex-shrink: 0;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+
+    .link-card:hover .social-icon {
+      transform: scale(1.12);
+    }
+
+    /* Colores distintivos suaves al pasar el cursor sobre cada red */
+    .link-card.whatsapp:hover .social-icon { color: #25D366; }
+    .link-card.tiktok:hover .social-icon   { color: #00f2fe; }
+    .link-card.instagram:hover .social-icon{ color: #E1306C; }
+    .link-card.facebook:hover .social-icon { color: #1877F2; }
   </style>
 </head>
 <body>
 
-  <!-- Foto de perfil -->
-  <div class="profile-container">
-    <img class="profile-img" src="https://i.postimg.cc/J7x8FNxr/LOGO-CS-BLANCO.png" alt="Foto de perfil">
-  </div>
-  
-  <!-- Título principal -->
-  <h1>COMPUSERVI.CO J</h1>
+  <!-- Resplandor que sigue el puntero -->
+  <div class="cursor-glow" id="cursorGlow"></div>
 
-  <!-- Lema / Subtítulo organizado -->
-  <div class="tagline">
-    <span>Soluciones Tecnológicas</span>
-    <span>Servicio Técnico Especializado</span>
-  </div>
-
-  <!-- Lista de Enlaces -->
-  <div class="links-container">
+  <div class="content-wrapper">
+    <!-- Foto de perfil -->
+    <div class="profile-container">
+      <img class="profile-img" src="https://i.postimg.cc/J7x8FNxr/LOGO-CS-BLANCO.png" alt="Logo COMPUSERVI.CO J">
+    </div>
     
-    <!-- WhatsApp (Sin el signo +) -->
-    <a href="https://wa.me/573227133114" class="link-card" target="_blank" rel="noopener">
-      💬 WhatsApp Directo
-    </a>
+    <!-- Título principal -->
+    <h1>COMPUSERVI.CO J</h1>
 
-    <!-- TikTok -->
-    <a href="https://www.tiktok.com/@compuservi.co.j" class="link-card" target="_blank" rel="noopener">
-      🎵 TikTok
-    </a>
+    <!-- Lema / Subtítulo -->
+    <div class="tagline">
+      <span>Soluciones Tecnológicas</span>
+      <span>Servicio Técnico Especializado</span>
+    </div>
 
-    <!-- Instagram -->
-    <a href="https://www.instagram.com/compuservi.coj/" class="link-card" target="_blank" rel="noopener">
-      📸 Instagram
-    </a>
-
-    <!-- Facebook -->
-    <a href="https://www.facebook.com/profile.php?id=100064021154075" class="link-card" target="_blank" rel="noopener">
-      📘 Facebook
-    </a>
-
-  </div>
-
-</body>
-</html>
+    <!-- Lista de Enlaces con Logos SVG -->
+    <div class="links-container">
+      
+      <!-- WhatsApp -->
+      <a href="https://wa.me/573227133114" class="link-card whatsapp" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.031 6.172c-3
